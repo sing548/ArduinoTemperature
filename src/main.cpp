@@ -13,7 +13,6 @@ String newHostName = "WifiTempArduino";
 
 ESP8266WebServer server(80);
 
-
 const int oneWireBus = 5;
 OneWire oneWire(oneWireBus);
 DallasTemperature sensors(&oneWire);
