@@ -9,13 +9,15 @@
 
 const char* ssid = "***";
 const char* password = "***";
-String newHostName = "WifiTempArduino";
+String newHostName = "ESP_Battery";
 
 ESP8266WebServer server(80);
 
 const int oneWireBus = 5;
 OneWire oneWire(oneWireBus);
 DallasTemperature sensors(&oneWire);
+
+unsigned long sleepTime = 0;
 
 void getHelloArduino();
 
@@ -40,6 +42,7 @@ void setup() {
     Serial.print(".");
   }
   
+
   Serial.println("");
   Serial.print("Connected to ");
   Serial.println(ssid);
@@ -59,6 +62,10 @@ void setup() {
 
 void loop() {
   server.handleClient();
+  if (sleepTime > 0 && millis() > sleepTime) {
+    Serial.println("Going to sleep now!");
+    ESP.deepSleep(3570e6);
+  }
 }
 
 void getHelloArduino() {
@@ -97,4 +104,5 @@ void handleGetCurrentTemperature() {
   result += temperature;
   result += "}";
   server.send(200, F("text/json"), "" + result );
+  sleepTime = millis() + 5000;
 }
